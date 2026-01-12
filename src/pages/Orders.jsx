@@ -90,15 +90,15 @@ const Orders = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-royalBrown tracking-wide">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Orders</h1>
+          <h1 className="text-2xl font-bold text-royalBrown font-royal dark:text-white">Orders</h1>
           <p className="text-gray-600 dark:text-gray-400">Manage customer orders</p>
         </div>
         <Button variant="outline" className="mt-4 sm:mt-0">
-          <Download className="h-4 w-4 mr-2" />
+          <Download className="h-4 w-4 mr-2 " />
           Export
         </Button>
       </div>

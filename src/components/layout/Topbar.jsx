@@ -22,7 +22,7 @@ const Topbar = ({ onMenuClick }) => {
   };
 
   return (
-    <header className="sticky top-0  z-30 bg-white dark:bg-gray-800 shadow-sm">
+    <header className="sticky top-0  font-royal tracking-wide z-30 bg-white dark:bg-gray-800 shadow-sm">
       <div className="flex items-center justify-between h-16 px-6">
         {/* Left section */}
         <div className="flex items-center">

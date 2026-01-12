@@ -44,7 +44,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-bold font-royal ">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -52,7 +52,7 @@ const Settings = () => {
           <p className="text-gray-600 dark:text-gray-400">Manage your store settings and preferences</p>
         </div>
         <Button onClick={handleSave} isLoading={isSaving}>
-          <Save className="h-4 w-4 mr-2" />
+          <Save className="h-4 w-4 mr-2 " />
           Save Changes
         </Button>
       </div>

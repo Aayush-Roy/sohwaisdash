@@ -69,9 +69,9 @@ const Customers = () => {
       key: 'name',
       title: 'Customer',
       render: (value, row) => (
-        <div className="flex items-center">
-          <div className="h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
-            <User className="h-5 w-5 text-primary-600 dark:text-primary-400" />
+        <div className="flex items-center font-royal tracking-wide">
+          <div className="h-10 w-10 rounded-full bg-[#D9BA7E] dark:bg-primary-900/30 flex items-center justify-center">
+            <User className="h-5 w-5 text-[#411818] dark:text-primary-400" />
           </div>
           <div className="ml-4">
             <p className="font-medium text-gray-900 dark:text-white">{value}</p>
@@ -130,7 +130,7 @@ const Customers = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Customers</h1>
+          <h1 className="text-3xl font-bold font-royal text-royalBrown tracking-wide dark:text-white">Customers</h1>
           <p className="text-gray-600 dark:text-gray-400">Manage your customer base</p>
         </div>
       </div>

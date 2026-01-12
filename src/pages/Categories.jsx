@@ -98,7 +98,7 @@ const Categories = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-royalBrown font-royal tracking-wide">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>

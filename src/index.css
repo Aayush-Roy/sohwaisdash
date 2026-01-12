@@ -21,6 +21,7 @@
   
   .scrollbar-thin::-webkit-scrollbar-track {
     @apply bg-gray-100 dark:bg-gray-800;
+    /* @apply bg-[#F4EDE2] dark:bg-gray-800; */
   }
   
   .scrollbar-thin::-webkit-scrollbar-thumb {

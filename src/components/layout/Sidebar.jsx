@@ -2,6 +2,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import logo from "../../assets/logo.png";
+
 import {
   LayoutDashboard,
   Package,
@@ -49,13 +51,16 @@ const Sidebar = ({ isOpen, onClose }) => {
     isOpen ? 'translate-x-0' : '-translate-x-full'
   } lg:translate-x-0 lg:static lg:inset-0`} // Add lg: classes here
 >
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full font-bold font-royal tracking-wide text-royalBrown dark:text-ivory">
           {/* Logo */}
           <div className="flex items-center justify-between h-16 px-6 border-b dark:border-gray-700">
             <div className="flex items-center">
-              <Package className="h-8 w-8 text-primary-600" />
-              <span className="ml-3 text-xl font-bold text-gray-800 dark:text-white">
-                AdminPro
+              {/* <Package className="h-8 w-8 text-primary-600" /> */}
+              <img src={logo} className="w-12 " />
+
+              <span className="ml-0  font-bold text-royalBrown  dark:text-white">
+                <p className='text-sm'>Sohwais</p>
+                <p>Threads</p>
               </span>
             </div>
             <button
@@ -76,7 +81,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 className={({ isActive }) =>
                   `flex items-center px-4 py-3 rounded-lg transition-colors ${
                     isActive
-                      ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400'
+                      ? 'bg-[#D9BA7E] text-xl dark:bg-primary-900/20 text-[#411818] dark:text-primary-400'
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                   }`
                 }

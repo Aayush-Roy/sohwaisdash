@@ -87,15 +87,23 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="space-y-6 ">
+    <div className="space-y-6  ">
       {/* Header */}
-      <div>
+      
+      {/* <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
         <p className="text-gray-600 dark:text-gray-400">Welcome back! Here's what's happening with your store today.</p>
-      </div>
-
+      </div> */}
+  <div>
+  <h1 className="text-3xl font-royal tracking-wide text-royalBrown dark:text-ivory">
+    Dashboard
+  </h1>
+  <p className="mt-1 font-body text-royalBrown/70 dark:text-ivory/70">
+    Welcome back! Here's what's happening with your store today.
+  </p>
+</div>
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {kpis.map((kpi, index) => (
           <div
             key={index}
@@ -131,7 +139,53 @@ const Dashboard = () => {
             </div>
           </div>
         ))}
+      </div> */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  {kpis.map((kpi, index) => (
+    <div
+      key={index}
+      className="bg-ivory dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-antiqueGold/30"
+    >
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm font-body text-royalBrown/60">
+            {kpi.title}
+          </p>
+
+          <p className="text-3xl font-royal text-royalBrown mt-2">
+            {kpi.value}
+          </p>
+
+          <div className="flex items-center mt-2">
+            {kpi.trend === 'up' ? (
+              <TrendingUp className="h-4 w-4 text-emerald-600 mr-1" />
+            ) : (
+              <TrendingDown className="h-4 w-4 text-maroon mr-1" />
+            )}
+
+            <span
+              className={`text-sm font-body ${
+                kpi.trend === 'up'
+                  ? 'text-emerald-700'
+                  : 'text-maroon'
+              }`}
+            >
+              {kpi.change}
+            </span>
+
+            <span className="text-sm font-body text-royalBrown/50 ml-2">
+              from last month
+            </span>
+          </div>
+        </div>
+
+        <div className="bg-antiqueGold/90 p-3 rounded-full shadow-md">
+          <kpi.icon className="h-6 w-6 text-ivory" />
+        </div>
       </div>
+    </div>
+  ))}
+</div>
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -153,7 +207,7 @@ const Dashboard = () => {
       </div>
 
       {/* Recent Orders */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+      {/* <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
             Recent Orders
@@ -163,7 +217,21 @@ const Dashboard = () => {
           </button>
         </div>
         <Table columns={orderColumns} data={recentOrders} />
-      </div>
+      </div> */}
+      <div className="bg-ivory dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-antiqueGold/30">
+  <div className="flex items-center justify-between mb-6">
+    <h3 className="text-xl font-royal tracking-wide text-royalBrown">
+      Recent Orders
+    </h3>
+
+    <button className="font-body text-antiqueGold hover:underline text-sm">
+      View all orders
+    </button>
+  </div>
+
+  <Table columns={orderColumns} data={recentOrders} />
+</div>
+
     </div>
   );
 };

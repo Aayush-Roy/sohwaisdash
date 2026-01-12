@@ -20,10 +20,10 @@ const Analytics = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-bold font-royal ">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Analytics</h1>
+        <h1 className="text-3xl  font-bold text-royalBrown dark:text-white">Analytics</h1>
         <p className="text-gray-600 dark:text-gray-400">Track your store performance</p>
       </div>
 
