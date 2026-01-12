@@ -94,12 +94,12 @@ const Topbar = ({ onMenuClick }) => {
           <div className="relative">
             <button className="flex items-center space-x-3">
               <img
-                src={user?.avatar}
-                alt={user?.name}
+                src={user?.avatar || "https://ui-avatars.com/api/?name=aayush%40gamil.com&background=3b82f6&color=fff"}
+                alt={user?.name || "A"}
                 className="h-8 w-8 rounded-full"
               />
               <div className="hidden md:block text-left">
-                <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name || "Admin"}</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">Administrator</p>
               </div>
             </button>

@@ -63,6 +63,7 @@ import Layout from './components/layout/Layout';
 import Login from './pages/auth/Login';
 import Signup from './pages/auth/Signup'; // Add this import
 import Dashboard from './pages/Dashboard';
+// import Products from './pages/Products';
 import Products from './pages/Products';
 import Orders from './pages/Orders';
 import Customers from './pages/Customers';
@@ -76,8 +77,8 @@ function App() {
       <AuthProvider>
         <Routes>
           {/* Public Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} /> {/* Add this route */}
+          {/* <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} /> Add this route */}
           
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
