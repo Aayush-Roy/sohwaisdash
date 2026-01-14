@@ -70,7 +70,7 @@ import Customers from './pages/Customers';
 import Categories from './pages/Categories';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
-
+import Collections from './pages/Collection';
 function App() {
   return (
     <Router>
@@ -91,6 +91,7 @@ function App() {
               <Route path="/categories" element={<Categories />} />
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/collections" element={<Collections />} />
             </Route>
           </Route>
           
