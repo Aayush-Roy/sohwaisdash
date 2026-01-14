@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Base URL setup
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://sohwais-be.onrender.com/api';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
