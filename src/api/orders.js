@@ -2,7 +2,8 @@
 import axios from 'axios';
 
 // Base URL setup
-const API_BASE_URL = 'https://sohwais-be.onrender.com/api';
+const API_BASE_URL = 'https://api.sohwais.com/api';
+// const API_BASE_URL = 'http://srv1272370.hstgr.cloud:5000/api';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
