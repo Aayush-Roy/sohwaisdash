@@ -2485,7 +2485,7 @@ if (!product && formData.imageUrls.length > 0) {
         </div>
         
         {/* Image URLs */}
-        {formData.imageUrls.length > 0 && (
+        {/* {formData.imageUrls.length > 0 && (
           <div className="mb-6">
             <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Image URLs</h5>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -2512,7 +2512,52 @@ if (!product && formData.imageUrls.length > 0) {
               ))}
             </div>
           </div>
-        )}
+        )} */}
+
+        {formData.imageUrls.length > 0 && (
+  <div className="mb-6">
+    <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+      Image URLs
+    </h5>
+
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      {(product ? formData.imageUrls.slice(0, 1) : formData.imageUrls)
+        .map((url, index) => (
+          <div key={index} className="relative group">
+            <img
+              src={url}
+              alt={`Product ${index + 1}`}
+              className="h-32 w-full object-cover rounded-lg"
+              onError={(e) => {
+                e.currentTarget.src =
+                  'https://via.placeholder.com/150x150?text=Image+Error';
+              }}
+            />
+
+            {/* Remove button sirf CREATE mode me */}
+            {!product && (
+              <button
+                type="button"
+                onClick={() => removeImageUrl(index)}
+                className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                disabled={isSubmitting}
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+        ))}
+    </div>
+
+    {/* Optional hint */}
+    {product && (
+      <p className="text-xs text-gray-500 mt-2">
+        ℹ️ Edit mode me sirf primary image dikhai jaati hai
+      </p>
+    )}
+  </div>
+)}
+
 
         {/* File Upload */}
         <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8">
