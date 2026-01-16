@@ -1694,7 +1694,7 @@ console.log("prod", productList);
           <p className="text-gray-600 dark:text-gray-400">Manage your traditional clothing products</p>
         </div>
         <div className="flex space-x-3 mt-4 sm:mt-0">
-          <Button
+          {/* <Button
             variant="outline"
             onClick={() => window.open('/collections', '_blank')}
             className="font-royal tracking-wide"
@@ -1703,7 +1703,7 @@ console.log("prod", productList);
             <Layers className="h-4 w-4 mr-2" />
             
             View Collections
-          </Button>
+          </Button> */}
           <Button
             onClick={() => setIsAddModalOpen(true)}
             className="font-royal tracking-wide bg-royalBrown hover:bg-royalBrown/90"
