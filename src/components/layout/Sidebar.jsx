@@ -25,9 +25,9 @@ const Sidebar = ({ isOpen, onClose }) => {
     { icon: Package, label: 'Products', path: '/products' },
     { icon: ShoppingCart, label: 'Orders', path: '/orders' },
     { icon: Users, label: 'Customers', path: '/customers' },
-    { icon: Tag, label: 'Categories', path: '/categories' },
+    // { icon: Tag, label: 'Categories', path: '/categories' },
     { icon: BarChart3, label: 'Analytics', path: '/analytics' },
-    { icon: Settings, label: 'Settings', path: '/settings' },
+    // { icon: Settings, label: 'Settings', path: '/settings' },
   ];
 
   return (
