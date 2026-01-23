@@ -1231,11 +1231,11 @@ if (product && imagesToRemove.length > 0) {
     </div>
 
     {/* Optional hint */}
-    {product && (
-      <p className="text-xs text-gray-500 mt-2">
-        ℹ️ Edit mode me sirf primary image dikhai jaati hai
-      </p>
-    )}
+    {/* {product && (
+      // <p className="text-xs text-gray-500 mt-2">
+      //   ℹ️ Edit mode me sirf primary image dikhai jaati hai
+      // </p>
+    )} */}
   </div>
 {/* )} */}
 
