@@ -1,25 +1,25 @@
 
-import React, { useState, useEffect } from 'react';
-import {
-  Plus,
-  Search,
-  Filter,
-  Edit,
-  Trash2,
-  Eye,
-  EyeOff,
-  ChevronDown,
-  Upload,
-  X,
-  Tag,
-  Grid,
-  Layers,
-} from 'lucide-react';
-import Table from '../components/common/Table';
-import Modal from '../components/common/Modal';
-import Button from '../components/common/Button';
-import Input from '../components/common/Input';
-import Select from '../components/common/Select';
+ import React, { useState, useEffect } from 'react';
+ import {
+   Plus,
+   Search,
+   Filter,
+   Edit,
+   Trash2,
+   Eye,
+   EyeOff,
+   ChevronDown,
+   Upload,
+   X,
+   Tag,
+   Grid,
+   Layers,
+ } from 'lucide-react';
+ import Table from '../components/common/Table';
+ import Modal from '../components/common/Modal';
+ import Button from '../components/common/Button';
+ import Input from '../components/common/Input';
+ import Select from '../components/common/Select';
 
 // API Base URL
 const API_BASE_URL = "https://api.sohwais.com/api";
@@ -41,6 +41,7 @@ const Products = () => {
   const [error, setError] = useState(null);
   const [collections, setCollections] = useState([]);
   const [categories, setCategories] = useState({});
+  console.log(categories);
 console.log("prod", productList);
   // Fetch collections and categories
   const fetchCollectionsAndCategories = async () => {
@@ -59,6 +60,7 @@ console.log("prod", productList);
       
       if (categoriesRes.ok) {
         const categoriesData = await categoriesRes.json();
+        console.log(categoriesData)
         if (categoriesData.success) {
           setCategories(categoriesData.data || {});
         }
@@ -68,14 +70,14 @@ console.log("prod", productList);
     }
   };
 
-  const getdata = async()=>{
-    const response = await fetch(`${API_BASE_URL}/products`);
-      console.log("r--",response);
+  // const getdata = async()=>{
+  //   const response = await fetch(`${API_BASE_URL}/products`);
+  //     console.log("r--",response);
 
-  }
-  useEffect(()=>{
-    getdata();
-  },[])
+  // }
+  // useEffect(()=>{
+  //   getdata();
+  // },[])
 
   // Fetch products from API
   const fetchProducts = async () => {
@@ -644,9 +646,26 @@ const ProductForm = ({ product, collections, categories, onClose, onSuccess }) =
   const [error, setError] = useState('');
   const [newFeature, setNewFeature] = useState('');
   const [newTag, setNewTag] = useState('');
+const [imagesToRemove, setImagesToRemove] = useState([]);
 
   // Get subcategories based on selected category
   const subCategories = categories[formData.category] || [];
+  console.log(subCategories);
+  const handleRemoveExistingImage = (url, index) => {
+  // Extract public_id from cloudinary URL
+  const publicIdMatch = url.match(/upload\/(?:v\d+\/)?([^\.]+)/);
+  const public_id = publicIdMatch ? publicIdMatch[1] : null;
+
+  if (public_id) {
+    setImagesToRemove(prev => [...prev, public_id]);
+  }
+
+  // Remove from UI instantly
+  setFormData(prev => ({
+    ...prev,
+    imageUrls: prev.imageUrls.filter((_, i) => i !== index)
+  }));
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -695,6 +714,14 @@ if (!product && formData.imageUrls.length > 0) {
       imageFiles.forEach((file) => {
         formDataToSend.append('images', file);
       });
+
+      // ⭐ SEND imagesToRemove to backend in EDIT mode
+if (product && imagesToRemove.length > 0) {
+  formDataToSend.append(
+    'imagesToRemove',
+    JSON.stringify(imagesToRemove)
+  );
+}
 
       // Determine API endpoint and method
       const url = product 
@@ -1168,7 +1195,7 @@ if (!product && formData.imageUrls.length > 0) {
           </div>
         )} */}
 
-        {formData.imageUrls.length > 0 && (
+        {/* {formData.imageUrls.length > 0 && ( */}
   <div className="mb-6">
     <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
       Image URLs
@@ -1209,6 +1236,42 @@ if (!product && formData.imageUrls.length > 0) {
         ℹ️ Edit mode me sirf primary image dikhai jaati hai
       </p>
     )}
+  </div>
+{/* )} */}
+
+{formData.imageUrls.length > 0 && (
+  <div className="mb-6">
+    <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+      Existing Images
+    </h5>
+
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      {formData.imageUrls.map((url, index) => (
+        <div key={index} className="relative group">
+          <img
+            src={url}
+            alt={`Product ${index + 1}`}
+            className="h-32 w-full object-cover rounded-lg"
+            onError={(e) => {
+              e.currentTarget.src =
+                'https://via.placeholder.com/150x150?text=Image+Error';
+            }}
+          />
+
+          {/* DELETE BUTTON IN EDIT MODE */}
+          {product && (
+            <button
+              type="button"
+              onClick={() => handleRemoveExistingImage(url, index)}
+              className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity"
+              disabled={isSubmitting}
+            >
+              <X size={14} />
+            </button>
+          )}
+        </div>
+      ))}
+    </div>
   </div>
 )}
 
@@ -1313,3 +1376,621 @@ if (!product && formData.imageUrls.length > 0) {
 };
 
 export default Products;
+
+
+
+
+
+
+
+
+
+
+// // COMPLETE Products.jsx - FULLY FIXED VERSION
+// import React, { useState, useEffect } from 'react';
+// import { Plus, Search, Filter, Edit, Trash2, Eye, EyeOff, ChevronDown, Upload, X, Tag, Grid, Layers } from 'lucide-react';
+// import Table from '../components/common/Table';
+// import Modal from '../components/common/Modal';
+// import Button from '../components/common/Button';
+// import Input from '../components/common/Input';
+// import Select from '../components/common/Select';
+// import ProductForm from '../components/ProductForm'; // Import the fixed ProductForm
+
+// const API_BASE_URL = 'https://api.sohwais.com/api'; // Update as needed
+
+// const Products = () => {
+//   // Main states
+//   const [productList, setProductList] = useState([]);
+//   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+//   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+//   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+//   const [selectedProduct, setSelectedProduct] = useState(null);
+  
+//   // Filter states
+//   const [searchTerm, setSearchTerm] = useState('');
+//   const [selectedCategory, setSelectedCategory] = useState('all');
+//   const [selectedCollection, setSelectedCollection] = useState('all');
+//   const [selectedStatus, setSelectedStatus] = useState('all');
+  
+//   // UI states
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [error, setError] = useState(null);
+//   const [collections, setCollections] = useState([]);
+//   const [categories, setCategories] = useState({});
+
+//   // Fetch collections and categories
+//   const fetchCollectionsAndCategories = async () => {
+//     try {
+//       const [collectionsRes, categoriesRes] = await Promise.all([
+//         fetch(`${API_BASE_URL}/products/collections`),
+//         fetch(`${API_BASE_URL}/products/categories`)
+//       ]);
+
+//       if (collectionsRes.ok) {
+//         const collectionsData = await collectionsRes.json();
+//         if (collectionsData.success) {
+//           setCollections(collectionsData.data);
+//         }
+//       }
+
+//       if (categoriesRes.ok) {
+//         const categoriesData = await categoriesRes.json();
+//         if (categoriesData.success) {
+//           setCategories(categoriesData.data);
+//         }
+//       }
+//     } catch (error) {
+//       console.error('Error fetching collections/categories:', error);
+//     }
+//   };
+
+//   // Fetch products
+//   const fetchProducts = async () => {
+//     try {
+//       setIsLoading(true);
+//       setError(null);
+      
+//       const response = await fetch(`${API_BASE_URL}/products?limit=100`);
+//       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
+//       const data = await response.json();
+//       if (data.success) {
+//         setProductList(data.data);
+//       } else {
+//         throw new Error(data.message || 'Failed to fetch products');
+//       }
+//     } catch (error) {
+//       console.error('Error fetching products:', error);
+//       setError(error.message);
+//       setProductList([]);
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//   // Initial load
+//   useEffect(() => {
+//     fetchCollectionsAndCategories();
+//     fetchProducts();
+//   }, []);
+
+//   // Table columns
+//   const columns = [
+//     {
+//       key: 'name',
+//       title: 'Product',
+//       render: (value, row) => (
+//         <div className="flex items-center">
+//           {row.images && row.images.length > 0 ? (
+//             <img
+//               src={row.images.find(img => img.isPrimary)?.url || row.images[0].url}
+//               alt={value}
+//               className="h-12 w-12 rounded-lg object-cover"
+//             />
+//           ) : (
+//             <div className="h-12 w-12 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+//               <span className="text-xs text-gray-500">No Image</span>
+//             </div>
+//           )}
+//           <div className="ml-4">
+//             <p className="font-medium text-gray-900 dark:text-white">{value}</p>
+//             <div className="flex items-center space-x-2 mt-1">
+//               <span className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
+//                 {row.collection}
+//               </span>
+//               <span className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full">
+//                 {row.subCategory}
+//               </span>
+//             </div>
+//           </div>
+//         </div>
+//       )
+//     },
+//     {
+//       key: 'price',
+//       title: 'Price',
+//       render: (value, row) => (
+//         <div>
+//           <p className="font-medium">{value}</p>
+//           {row.discount > 0 && (
+//             <div className="flex items-center space-x-2 text-sm">
+//               <span className="text-green-600 font-medium">
+//                 {Math.round(value - (value * row.discount / 100))}
+//               </span>
+//               <span className="line-through text-gray-500">{value}</span>
+//               <span className="bg-red-100 text-red-800 px-2 py-0.5 rounded text-xs">
+//                 {row.discount}% off
+//               </span>
+//             </div>
+//           )}
+//         </div>
+//       )
+//     },
+//     {
+//       key: 'stock',
+//       title: 'Stock',
+//       render: (value) => (
+//         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+//           value > 50 ? 'bg-green-100 text-green-800' :
+//           value > 10 ? 'bg-yellow-100 text-yellow-800' :
+//           'bg-red-100 text-red-800'
+//         }`}>
+//           {value} units
+//         </span>
+//       )
+//     },
+//     {
+//       key: 'status',
+//       title: 'Status',
+//       render: (value) => (
+//         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+//           value === 'Active' ? 'bg-green-100 text-green-800' :
+//           value === 'Inactive' ? 'bg-red-100 text-red-800' :
+//           value === 'Out of Stock' ? 'bg-orange-100 text-orange-800' :
+//           'bg-blue-100 text-blue-800'
+//         }`}>
+//           {value}
+//         </span>
+//       )
+//     },
+//     {
+//       key: 'category',
+//       title: 'Category',
+//       render: (value) => (
+//         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+//           value === 'Men' ? 'bg-blue-100 text-blue-800' :
+//           value === 'Women' ? 'bg-pink-100 text-pink-800' :
+//           'bg-purple-100 text-purple-800'
+//         }`}>
+//           {value}
+//         </span>
+//       )
+//     },
+//     {
+//       key: 'variants',
+//       title: 'Variants',
+//       render: (value) => (
+//         <div className="flex flex-wrap gap-1">
+//           {value && value.length > 0 ? (
+//             <>
+//               {value.slice(0, 2).map((variant, index) => (
+//                 <div key={index} className="flex items-center space-x-1">
+//                   <div
+//                     className="w-3 h-3 rounded-full border"
+//                     style={{ backgroundColor: variant.color }}
+//                   />
+//                   <span className="text-xs text-gray-600 dark:text-gray-300">{variant.size}</span>
+//                 </div>
+//               ))}
+//               {value.length > 2 && (
+//                 <span className="text-xs text-gray-500">+{value.length - 2} more</span>
+//               )}
+//             </>
+//           ) : (
+//             <span className="text-gray-500 text-sm">No variants</span>
+//           )}
+//         </div>
+//       )
+//     },
+//     {
+//       key: 'actions',
+//       title: 'Actions',
+//       render: (_, row) => (
+//         <div className="flex space-x-1">
+//           <button
+//             onClick={() => handleEdit(row)}
+//             className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+//             title="Edit"
+//           >
+//             <Edit size={16} />
+//           </button>
+//           <button
+//             onClick={() => handleDelete(row)}
+//             className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+//             title="Delete"
+//           >
+//             <Trash2 size={16} />
+//           </button>
+//         </div>
+//       )
+//     }
+//   ];
+
+//   const handleEdit = (product) => {
+//     setSelectedProduct(product);
+//     setIsEditModalOpen(true);
+//   };
+
+//   const handleDelete = (product) => {
+//     setSelectedProduct(product);
+//     setIsDeleteModalOpen(true);
+//   };
+
+//   const handleToggleStatus = async (product) => {
+//     try {
+//       const newStatus = product.status === 'Active' ? 'Inactive' : 'Active';
+//       const response = await fetch(`${API_BASE_URL}/products/${product._id}`, {
+//         method: 'PUT',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify({ status: newStatus })
+//       });
+
+//       if (!response.ok) throw new Error('Failed to update status');
+      
+//       const data = await response.json();
+//       if (data.success) {
+//         setProductList(prev => 
+//           prev.map(p => p._id === product._id ? { ...p, status: newStatus } : p)
+//         );
+//       } else {
+//         throw new Error(data.message || 'Failed to update status');
+//       }
+//     } catch (error) {
+//       console.error('Error updating status:', error);
+//       alert(`Failed to update status: ${error.message}`);
+//     }
+//   };
+
+//   const handleConfirmDelete = async () => {
+//     try {
+//       const response = await fetch(`${API_BASE_URL}/products/${selectedProduct._id}`, {
+//         method: 'DELETE'
+//       });
+
+//       if (!response.ok) throw new Error('Failed to delete product');
+      
+//       const data = await response.json();
+//       if (data.success) {
+//         setProductList(prev => prev.filter(p => p._id !== selectedProduct._id));
+//         setIsDeleteModalOpen(false);
+//         setSelectedProduct(null);
+//       } else {
+//         throw new Error(data.message || 'Failed to delete product');
+//       }
+//     } catch (error) {
+//       console.error('Error deleting product:', error);
+//       alert(`Failed to delete product: ${error.message}`);
+//     }
+//   };
+
+//   // Filter products
+//   const filteredProducts = productList.filter(product => {
+//     const matchesSearch = 
+//       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//       product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//       product.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+//     const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+//     const matchesCollection = selectedCollection === 'all' || product.collection === selectedCollection;
+//     const matchesStatus = selectedStatus === 'all' || product.status === selectedStatus;
+    
+//     return matchesSearch && matchesCategory && matchesCollection && matchesStatus;
+//   });
+
+//   // Get unique filter options
+//   const uniqueCategories = ['all', ...new Set(productList.map(p => p.category))];
+//   const uniqueCollections = ['all', ...new Set(productList.map(p => p.collection))];
+
+//   const handleProductAdded = () => {
+//     fetchProducts();
+//     setIsAddModalOpen(false);
+//   };
+
+//   const handleProductUpdated = () => {
+//     fetchProducts();
+//     setIsEditModalOpen(false);
+//     setSelectedProduct(null);
+//   };
+
+//   return (
+//     <div className="space-y-6 font-royal tracking-wide">
+//       {/* Header */}
+//       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+//         <div>
+//           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Products</h1>
+//           <p className="text-gray-600 dark:text-gray-400">
+//             Manage your traditional clothing products
+//           </p>
+//         </div>
+//         <div className="flex space-x-3 mt-4 sm:mt-0">
+//           <Button
+//             variant="outline"
+//             onClick={() => window.open('/collections', '_blank')}
+//             className="font-royal tracking-wide"
+//           >
+//             <Layers className="h-4 w-4 mr-2" />
+//             View Collections
+//           </Button>
+//           <Button
+//             onClick={() => setIsAddModalOpen(true)}
+//             className="font-royal tracking-wide bg-royalBrown hover:bg-royalBrown/90"
+//           >
+//             <Plus className="h-4 w-4 mr-2" />
+//             Add Product
+//           </Button>
+//         </div>
+//       </div>
+
+//       {/* Stats Cards */}
+//       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+//         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+//           <div className="flex items-center justify-between">
+//             <div>
+//               <p className="text-sm text-gray-600 dark:text-gray-400">Total Products</p>
+//               <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
+//                 {productList.length}
+//               </p>
+//             </div>
+//             <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+//               <Grid className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+//             </div>
+//           </div>
+//         </div>
+//         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+//           <div className="flex items-center justify-between">
+//             <div>
+//               <p className="text-sm text-gray-600 dark:text-gray-400">Men's Wear</p>
+//               <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
+//                 {productList.filter(p => p.category === 'Men').length}
+//               </p>
+//             </div>
+//             <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+//               <span className="text-lg font-semibold text-blue-600 dark:text-blue-400">M</span>
+//             </div>
+//           </div>
+//         </div>
+//         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+//           <div className="flex items-center justify-between">
+//             <div>
+//               <p className="text-sm text-gray-600 dark:text-gray-400">Women's Wear</p>
+//               <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
+//                 {productList.filter(p => p.category === 'Women').length}
+//               </p>
+//             </div>
+//             <div className="p-3 bg-pink-100 dark:bg-pink-900/30 rounded-lg">
+//               <span className="text-lg font-semibold text-pink-600 dark:text-pink-400">W</span>
+//             </div>
+//           </div>
+//         </div>
+//         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+//           <div className="flex items-center justify-between">
+//             <div>
+//               <p className="text-sm text-gray-600 dark:text-gray-400">Active Products</p>
+//               <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
+//                 {productList.filter(p => p.status === 'Active').length}
+//               </p>
+//             </div>
+//             <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+//               <Eye className="h-6 w-6 text-green-600 dark:text-green-400" />
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Loading and Error States */}
+//       {isLoading && (
+//         <div className="text-center py-12">
+//           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-royalBrown mx-auto"></div>
+//           <p className="mt-4 text-gray-600 dark:text-gray-400">Loading products...</p>
+//         </div>
+//       )}
+
+//       {error && !isLoading && (
+//         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6">
+//           <div className="flex items-start">
+//             <div className="flex-shrink-0">
+//               <div className="h-6 w-6 text-red-400"></div>
+//             </div>
+//             <div className="ml-3">
+//               <h3 className="text-sm font-medium text-red-800 dark:text-red-200">Error loading products</h3>
+//               <div className="mt-2 text-sm text-red-700 dark:text-red-300">{error}</div>
+//             </div>
+//           </div>
+//           <div className="mt-4">
+//             <button
+//               onClick={fetchProducts}
+//               className="text-sm font-medium text-red-800 dark:text-red-200 hover:text-red-900"
+//             >
+//               Try again
+//             </button>
+//           </div>
+//         </div>
+//       )}
+
+//       {/* Filters - Only show when not loading and no error */}
+//       {!isLoading && !error && (
+//         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+//           <div className="flex flex-col lg:flex-row lg:items-center lg:space-x-6 space-y-6 lg:space-y-0">
+//             <div className="flex-1">
+//               <div className="relative">
+//                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+//                 <Input
+//                   type="search"
+//                   placeholder="Search products by name, description, or tags..."
+//                   value={searchTerm}
+//                   onChange={(e) => setSearchTerm(e.target.value)}
+//                   className="pl-12 w-full text-lg"
+//                 />
+//               </div>
+//             </div>
+//             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+//               <div className="relative">
+//                 <select
+//                   value={selectedCategory}
+//                   onChange={(e) => setSelectedCategory(e.target.value)}
+//                   className="w-full appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg pl-4 pr-10 py-3 text-sm focus:ring-2 focus:ring-royalBrown focus:border-transparent"
+//                 >
+//                   <option value="all">All Categories</option>
+//                   {Object.keys(categories).map(cat => (
+//                     <option key={cat} value={cat}>{cat}</option>
+//                   ))}
+//                 </select>
+//                 <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+//               </div>
+//               <div className="relative">
+//                 <select
+//                   value={selectedCollection}
+//                   onChange={(e) => setSelectedCollection(e.target.value)}
+//                   className="w-full appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg pl-4 pr-10 py-3 text-sm focus:ring-2 focus:ring-royalBrown focus:border-transparent"
+//                 >
+//                   <option value="all">All Collections</option>
+//                   {uniqueCollections.filter(c => c !== 'all').map(collection => (
+//                     <option key={collection} value={collection}>{collection}</option>
+//                   ))}
+//                 </select>
+//                 <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+//               </div>
+//               <div className="relative">
+//                 <select
+//                   value={selectedStatus}
+//                   onChange={(e) => setSelectedStatus(e.target.value)}
+//                   className="w-full appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg pl-4 pr-10 py-3 text-sm focus:ring-2 focus:ring-royalBrown focus:border-transparent"
+//                 >
+//                   <option value="all">All Status</option>
+//                   <option value="Active">Active</option>
+//                   <option value="Inactive">Inactive</option>
+//                   <option value="Out of Stock">Out of Stock</option>
+//                   <option value="Coming Soon">Coming Soon</option>
+//                 </select>
+//                 <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+
+//       {/* Products Table */}
+//       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+//         {filteredProducts.length === 0 ? (
+//           <div className="text-center py-16">
+//             <div className="text-gray-400 dark:text-gray-500 mb-6">
+//               <Search className="h-16 w-16 mx-auto" />
+//             </div>
+//             <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-3">No products found</h3>
+//             <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
+//               {searchTerm || selectedCategory !== 'all' || selectedCollection !== 'all' || selectedStatus !== 'all'
+//                 ? 'Try changing your filters or search term'
+//                 : 'Start by adding your first traditional clothing product'
+//               }
+//             </p>
+//             <Button
+//               onClick={() => setIsAddModalOpen(true)}
+//               className="bg-royalBrown hover:bg-royalBrown/90"
+//             >
+//               <Plus className="h-4 w-4 mr-2" />
+//               Add First Product
+//             </Button>
+//           </div>
+//         ) : (
+//           <div className="overflow-x-auto">
+//             <Table columns={columns} data={filteredProducts} />
+//           </div>
+//         )}
+//       </div>
+
+//       {/* Add Product Modal */}
+//       <Modal
+//         isOpen={isAddModalOpen}
+//         onClose={() => setIsAddModalOpen(false)}
+//         title="Add New Traditional Product"
+//         size="2xl"
+//       >
+//         <ProductForm
+//           collections={collections}
+//           categories={categories}
+//           onClose={() => setIsAddModalOpen(false)}
+//           onSuccess={handleProductAdded}
+//         />
+//       </Modal>
+
+//       {/* Edit Product Modal */}
+//       <Modal
+//         isOpen={isEditModalOpen}
+//         onClose={() => {
+//           setIsEditModalOpen(false);
+//           setSelectedProduct(null);
+//         }}
+//         title="Edit Product"
+//         size="2xl"
+//       >
+//         <ProductForm
+//           product={selectedProduct}
+//           collections={collections}
+//           categories={categories}
+//           onClose={() => {
+//             setIsEditModalOpen(false);
+//             setSelectedProduct(null);
+//           }}
+//           onSuccess={handleProductUpdated}
+//         />
+//       </Modal>
+
+//       {/* Delete Confirmation Modal */}
+//       <Modal
+//         isOpen={isDeleteModalOpen}
+//         onClose={() => setIsDeleteModalOpen(false)}
+//         title="Delete Product"
+//         size="md"
+//       >
+//         <div className="space-y-6">
+//           <div className="flex items-center space-x-4">
+//             {selectedProduct?.images?.[0] && (
+//               <img
+//                 src={selectedProduct.images[0].url}
+//                 alt={selectedProduct?.name}
+//                 className="h-20 w-20 rounded-lg object-cover"
+//               />
+//             )}
+//             <div>
+//               <h4 className="font-medium text-gray-900 dark:text-white">{selectedProduct?.name}</h4>
+//               <p className="text-sm text-gray-600 dark:text-gray-400">
+//                 {selectedProduct?.collection} • {selectedProduct?.category}
+//               </p>
+//             </div>
+//           </div>
+//           <p className="text-gray-600 dark:text-gray-400">
+//             Are you sure you want to delete this product? This action cannot be undone and all
+//             associated images will be removed from storage.
+//           </p>
+//           <div className="flex justify-end space-x-3 pt-4 border-t dark:border-gray-700">
+//             <Button
+//               variant="outline"
+//               onClick={() => setIsDeleteModalOpen(false)}
+//             >
+//               Cancel
+//             </Button>
+//             <Button
+//               variant="danger"
+//               onClick={handleConfirmDelete}
+//             >
+//               <Trash2 className="h-4 w-4 mr-2" />
+//               Delete Product
+//             </Button>
+//           </div>
+//         </div>
+//       </Modal>
+//     </div>
+//   );
+// };
+
+// export default Products;
