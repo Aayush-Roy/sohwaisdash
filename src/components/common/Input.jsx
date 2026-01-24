@@ -30,6 +30,7 @@ const Input = ({
           onChange={onChange}
           placeholder={placeholder}
           disabled={disabled}
+           onWheel={(e) => e.target.blur()}
           className={`
             w-full px-4 py-2.5 rounded-lg border
             ${Icon ? 'pl-10' : 'pl-4'}

@@ -1123,6 +1123,7 @@ if (product && imagesToRemove.length > 0) {
                   min="0"
                   step="0.01"
                   required
+                   onWheel={(e) => e.target.blur()}
                   placeholder="Variant price"
                   disabled={isSubmitting}
                 />
