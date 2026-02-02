@@ -13,8 +13,8 @@ const ProtectedRoute = () => {
     );
   }
 
-  // return user ? <Outlet /> : <Navigate to="/login" replace />;
-  return !user ? <Outlet /> : null;
+  return user ? <Outlet /> : <Navigate to="/login" replace />;
+  // return !user ? <Outlet /> : null;
 };
 
 export default ProtectedRoute;
